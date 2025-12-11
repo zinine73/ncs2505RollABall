@@ -4,15 +4,16 @@ using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviour
 {
+    public float speed = 0f;
+    //public TextMeshProUGUI countText;
+    public TMP_Text countText;
+    public GameObject youWinText;
     Rigidbody rb;
     int count;
     int totalCount;
     float movementX;
     float movementY;
-    public float speed = 0f;
-    //public TextMeshProUGUI countText;
-    public TMP_Text countText;
-    public GameObject youWinText;
+    GameObject enemyGameObject;
 
     void Start()
     {
@@ -22,6 +23,8 @@ public class PlayerController : MonoBehaviour
             FindGameObjectsWithTag("PICKUP").Length;
         SetCountText();
         youWinText.SetActive(false);
+        enemyGameObject = GameObject.
+            FindGameObjectWithTag("ENEMY");
     }
 
     void OnMove(InputValue movementValue)
@@ -50,7 +53,20 @@ public class PlayerController : MonoBehaviour
             if (count >= totalCount)
             {
                 youWinText.SetActive(true);
+                //Destroy(GameObject.FindGameObjectWithTag("ENEMY"));
+                Destroy(enemyGameObject);
             }
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("ENEMY"))
+        {
+            this.gameObject.SetActive(false);
+            youWinText.SetActive(true);
+            youWinText.GetComponent<TMP_Text>().text
+                = "You Lose!";
         }
     }
 
